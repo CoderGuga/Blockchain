@@ -1,0 +1,15 @@
+D:\BlockChainas\main\bin\Debug\net9.0\main.exe
+D:\BlockChainas\main\bin\Debug\net9.0\main.deps.json
+D:\BlockChainas\main\bin\Debug\net9.0\main.runtimeconfig.json
+D:\BlockChainas\main\bin\Debug\net9.0\main.dll
+D:\BlockChainas\main\bin\Debug\net9.0\main.pdb
+D:\BlockChainas\main\obj\Debug\net9.0\main.GeneratedMSBuildEditorConfig.editorconfig
+D:\BlockChainas\main\obj\Debug\net9.0\main.AssemblyInfoInputs.cache
+D:\BlockChainas\main\obj\Debug\net9.0\main.AssemblyInfo.cs
+D:\BlockChainas\main\obj\Debug\net9.0\main.csproj.CoreCompileInputs.cache
+D:\BlockChainas\main\obj\Debug\net9.0\main.sourcelink.json
+D:\BlockChainas\main\obj\Debug\net9.0\main.dll
+D:\BlockChainas\main\obj\Debug\net9.0\refint\main.dll
+D:\BlockChainas\main\obj\Debug\net9.0\main.pdb
+D:\BlockChainas\main\obj\Debug\net9.0\main.genruntimeconfig.cache
+D:\BlockChainas\main\obj\Debug\net9.0\ref\main.dll
