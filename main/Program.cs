@@ -21,6 +21,7 @@ class Program
         byte[] hash = GetHashString(text, 32);
         BigInteger bigInteger = new BigInteger(hash);
         BigInteger mult = MultNumbers(bigInteger);
+        Console.WriteLine($"big int: {bigInteger} mult: {mult}");
         hash = GetHashString(mult.ToString(), 32);
         //int intValue = BitConverter.ToInt32(firstHash, 0);
         //byte[] newHash = ShuffleBytes(firstHash, intValue);
@@ -103,7 +104,8 @@ class Program
         byte[] bytes = bigInteger.ToByteArray();
         foreach (byte num in bytes)
         {
-            res *= num;
+            int mult = num == 0 ? 1 : num;
+            res *= mult;
         }
         return res;
     }
