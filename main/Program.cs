@@ -9,19 +9,33 @@ class Program
 
     static void Main()
     {
-        Console.WriteLine("Name: ");
+        Console.WriteLine("Skaityti is failo: 1\nSkaityti komandine eilute: 2");
+        string? input = Console.ReadLine();
 
-        string filePath = "Tekstas.txt";
+        string text;
+        while (input != "1" && input != "2")
+        {
+            Console.WriteLine("Iveskite 1 arba 2");
+            input = Console.ReadLine();
+        }
 
-        //string filePath = Console.ReadLine();
+        if (input == "1")
+        {
+            Console.WriteLine("Iveskite failo pavadinima");
+            string filePath = Console.ReadLine();
+            text = File.ReadAllText(filePath);
+        }
+        else
+        {
+            Console.WriteLine("Iveskite norima teksta");
+            text = Console.ReadLine();
+        }
 
-        string text = File.ReadAllText(filePath);
-        //Console.WriteLine("Input:\n" + text);
 
         byte[] hash = GetHashString(text, 32);
         BigInteger bigInteger = new BigInteger(hash);
         BigInteger mult = MultNumbers(bigInteger);
-        Console.WriteLine($"big int: {bigInteger} mult: {mult}");
+        //Console.WriteLine($"big int: {bigInteger} mult: {mult}");
         hash = GetHashString(mult.ToString(), 32);
         //int intValue = BitConverter.ToInt32(firstHash, 0);
         //byte[] newHash = ShuffleBytes(firstHash, intValue);
