@@ -7,7 +7,7 @@ class Program
 {
     static void Main()
     {
-        Console.WriteLine($"Collision count with 500 string: {Tyrimas.RunPairCheck(100000, 500)}");
+        Tyrimas.AvalancheEffect(100000, 20);
     }
 
     static void InputText()

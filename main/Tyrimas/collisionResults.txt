@@ -2,3 +2,8 @@ Collision count with 10 string: 0
 Collision count with 100 string: 0
 Collision count with 500 string: 0
 Collision count with 1000 string: 0
+
+
+Lavinos efektas:
+Bit difference: min=41, max=171, avg=104.50788
+Hex difference: min=22, max=63, avg=39.80696

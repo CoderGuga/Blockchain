@@ -54,4 +54,53 @@ public class Tyrimas
         return new string(Enumerable.Range(0, length)
             .Select(_ => chars[random.Next(chars.Length)]).ToArray());
     }
+
+    public static void AvalancheEffect(int pairCount, int stringLength)
+    {
+        int minBitDiff = int.MaxValue, maxBitDiff = int.MinValue, totalBitDiff = 0;
+        int minHexDiff = int.MaxValue, maxHexDiff = int.MinValue, totalHexDiff = 0;
+
+        for (int i = 0; i < pairCount; i++)
+        {
+            string baseStr = GenerateRandomString(stringLength);
+            char[] arr = baseStr.ToCharArray();
+            int pos = new Random().Next(stringLength);
+            arr[pos] = arr[pos] == 'A' ? 'B' : 'A'; // Change one symbol
+            string modStr = new string(arr);
+
+            string hash1 = Hashing.HashString(baseStr);
+            string hash2 = Hashing.HashString(modStr);
+
+            byte[] hash1B = hash1.Select(c => Convert.ToByte(c)).ToArray();
+            byte[] hash2B = hash2.Select(c => Convert.ToByte(c)).ToArray();
+
+            // Bit difference
+            int bitDiff = 0;
+            for (int j = 0; j < Math.Min(hash1B.Length, hash2B.Length); j++)
+            {
+                bitDiff += Convert.ToString(hash1B[j] ^ hash2B[j], 2).Count(b => b == '1');
+            }
+            minBitDiff = Math.Min(minBitDiff, bitDiff);
+            maxBitDiff = Math.Max(maxBitDiff, bitDiff);
+            totalBitDiff += bitDiff;
+
+            // Hex difference
+            int hexDiff = hash1.Zip(hash2, (a, b) => a == b ? 0 : 1).Sum();
+            minHexDiff = Math.Min(minHexDiff, hexDiff);
+            maxHexDiff = Math.Max(maxHexDiff, hexDiff);
+            totalHexDiff += hexDiff;
+        }
+
+        Console.WriteLine($"Bit difference: min={minBitDiff}, max={maxBitDiff}, avg={(double)totalBitDiff / pairCount}");
+        Console.WriteLine($"Hex difference: min={minHexDiff}, max={maxHexDiff}, avg={(double)totalHexDiff / pairCount}");
+    }
+
+    static byte[] HexStringToBytes(string hex)
+    {
+        int len = hex.Length;
+        byte[] bytes = new byte[len / 2];
+        for (int i = 0; i < len; i += 2)
+            bytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
+        return bytes;
+    }
 }
