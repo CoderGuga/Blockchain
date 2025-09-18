@@ -7,7 +7,7 @@ class Program
 {
     static void Main()
     {
-        Tyrimas.ReadKonstitucija();
+        Console.WriteLine($"Collision count with 500 string: {Tyrimas.RunPairCheck(100000, 500)}");
     }
 
     static void InputText()

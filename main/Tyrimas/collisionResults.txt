@@ -1,0 +1,4 @@
+Collision count with 10 string: 0
+Collision count with 100 string: 0
+Collision count with 500 string: 0
+Collision count with 1000 string: 0

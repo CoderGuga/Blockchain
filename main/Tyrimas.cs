@@ -24,4 +24,34 @@ public class Tyrimas
 
         File.WriteAllText("Tyrimas/timeResults.txt", result);
     }
+
+    public static int RunPairCheck(int count, int lenght)
+    {
+        int colCount = 0;
+
+        for (int i = 0; i < count; i++)
+        {
+            if (CheckHashPairs(lenght))
+                colCount++;
+        }
+
+        return colCount;
+    }
+
+    public static bool CheckHashPairs(int lenght)
+    {
+        string hash1 = Hashing.HashString(GenerateRandomString(lenght));
+        string hash2 = Hashing.HashString(GenerateRandomString(lenght));
+
+        //File.AppendAllText("Tyrimas/collisionResults.txt", $"{hash1} - {hash2}\n");
+        return hash1 == hash2 ? true : false;
+    }
+
+    static string GenerateRandomString(int length)
+    {
+        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        Random random = new Random();
+        return new string(Enumerable.Range(0, length)
+            .Select(_ => chars[random.Next(chars.Length)]).ToArray());
+    }
 }

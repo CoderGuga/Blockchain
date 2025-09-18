@@ -18,6 +18,18 @@ public class Hashing
         Console.WriteLine(hexString + "\n");
     }
 
+    public static string HashString(string text)
+    {
+        byte[] hash = GetHashString(text, 32);
+        BigInteger bigInteger = new BigInteger(hash);
+        BigInteger mult = MultNumbers(bigInteger);
+        hash = GetHashString(mult.ToString(), 32);
+
+        string hexString = BitConverter.ToString(hash).Replace("-", "");
+
+        return hexString;
+    }
+
     static byte[] XorArrays(byte[] a, byte[] b)
     {
         int length = Math.Min(a.Length, b.Length);
