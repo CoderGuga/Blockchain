@@ -1,0 +1,11 @@
+Line Count 001 Time 086212 ticks
+Line Count 002 Time 003317 ticks
+Line Count 004 Time 002262 ticks
+Line Count 008 Time 025713 ticks
+Line Count 016 Time 003217 ticks
+Line Count 032 Time 004333 ticks
+Line Count 064 Time 010237 ticks
+Line Count 128 Time 063520 ticks
+Line Count 256 Time 180161 ticks
+Line Count 512 Time 872591 ticks
+Line Count 1024 Time 3611746 ticks
