@@ -7,7 +7,48 @@ class Program
 {
     static void Main()
     {
-        Tyrimas.AvalancheEffect(100000, 20);
+        Tyrimas.RunPairCheck(100000, 10, "gab");
+        Tyrimas.RunPairCheck(100000, 100, "gab");
+        Tyrimas.RunPairCheck(100000, 500, "gab");
+        Tyrimas.RunPairCheck(100000, 1000, "gab");
+
+        Tyrimas.RunPairCheck(100000, 10, "MD5");
+        Tyrimas.RunPairCheck(100000, 100, "MD5");
+        Tyrimas.RunPairCheck(100000, 500, "MD5");
+        Tyrimas.RunPairCheck(100000, 1000, "MD5");
+
+        Tyrimas.RunPairCheck(100000, 10, "SHA1");
+        Tyrimas.RunPairCheck(100000, 100, "SHA1");
+        Tyrimas.RunPairCheck(100000, 500, "SHA1");
+        Tyrimas.RunPairCheck(100000, 1000, "SHA1");
+
+        Tyrimas.RunPairCheck(100000, 10, "SHA256");
+        Tyrimas.RunPairCheck(100000, 100, "SHA256");
+        Tyrimas.RunPairCheck(100000, 500, "SHA256");
+        Tyrimas.RunPairCheck(100000, 1000, "SHA256");
+    }
+
+    static void MaxCheck()
+    {
+        Tyrimas.RunPairCheck(100000, 10, "gab");
+        Tyrimas.RunPairCheck(100000, 100, "gab");
+        Tyrimas.RunPairCheck(100000, 500, "gab");
+        Tyrimas.RunPairCheck(100000, 1000, "gab");
+
+        Tyrimas.RunPairCheck(100000, 10, "MD5");
+        Tyrimas.RunPairCheck(100000, 100, "MD5");
+        Tyrimas.RunPairCheck(100000, 500, "MD5");
+        Tyrimas.RunPairCheck(100000, 1000, "MD5");
+
+        Tyrimas.RunPairCheck(100000, 10, "SHA1");
+        Tyrimas.RunPairCheck(100000, 100, "SHA1");
+        Tyrimas.RunPairCheck(100000, 500, "SHA1");
+        Tyrimas.RunPairCheck(100000, 1000, "SHA1");
+
+        Tyrimas.RunPairCheck(100000, 10, "SHA256");
+        Tyrimas.RunPairCheck(100000, 100, "SHA256");
+        Tyrimas.RunPairCheck(100000, 500, "SHA256");
+        Tyrimas.RunPairCheck(100000, 1000, "SHA256");
     }
 
     static void InputText()

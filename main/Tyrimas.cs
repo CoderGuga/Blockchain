@@ -1,8 +1,10 @@
 using System.Diagnostics;
+using System.Text;
+using System.Security.Cryptography;
 
 public class Tyrimas
 {
-    public static void ReadKonstitucija()
+    public static void ReadKonstitucija(string hashType)
     {
         int lineCount = 1;
 
@@ -15,33 +17,90 @@ public class Tyrimas
         {
             string text = string.Join("\n", lines.Take(lineCount));
             //Console.WriteLine(text+"\n");
-            Stopwatch sw = Stopwatch.StartNew();
-            Hashing.Hash(text);
-            sw.Stop();
+            Stopwatch sw;
+            if (hashType == "gab")
+            {
+                sw = Stopwatch.StartNew();
+                Hashing.Hash(text);
+                sw.Stop();
+            }
+            else if (hashType == "MD5")
+            {
+                sw = Stopwatch.StartNew();
+                GetMd5Hash(text);
+                sw.Stop();
+            }
+            else if (hashType == "SHA1")
+            {
+                sw = Stopwatch.StartNew();
+                GetSha1(text);
+                sw.Stop();
+            }
+            else if (hashType == "SHA256")
+            {
+                sw = Stopwatch.StartNew();
+                GetSha256(text);
+                sw.Stop();
+            }
+            else
+            {
+                Console.WriteLine("Wrong hash type");
+                return;
+            }
             result += $"Line Count {lineCount.ToString("D3")} Time {sw.ElapsedTicks.ToString("D6")} ticks\n";
             lineCount *= 2;
         }
 
-        File.WriteAllText("Tyrimas/timeResults.txt", result);
+        Console.WriteLine(hashType + ":\n");
+        Console.WriteLine(result);
     }
 
-    public static int RunPairCheck(int count, int lenght)
+    public static int RunPairCheck(int count, int lenght, string hashType)
     {
         int colCount = 0;
 
         for (int i = 0; i < count; i++)
         {
-            if (CheckHashPairs(lenght))
+            if (CheckHashPairs(lenght, hashType))
                 colCount++;
         }
 
+
+        Console.WriteLine(hashType + ":\n");
+        Console.WriteLine($"String lenght: {lenght} Collision count: {colCount}");
         return colCount;
     }
 
-    public static bool CheckHashPairs(int lenght)
+    public static bool CheckHashPairs(int lenght, string hashType)
     {
-        string hash1 = Hashing.HashString(GenerateRandomString(lenght));
-        string hash2 = Hashing.HashString(GenerateRandomString(lenght));
+        string hash1;
+        string hash2;
+
+        if (hashType == "gab")
+        {
+            hash1 = Hashing.HashString(GenerateRandomString(lenght));
+            hash2 = Hashing.HashString(GenerateRandomString(lenght));
+        }
+        else if (hashType == "MD5")
+        {
+            hash1 = GetMd5Hash(GenerateRandomString(lenght));
+            hash2 = GetMd5Hash(GenerateRandomString(lenght));
+        }
+        else if (hashType == "SHA1")
+        {
+            hash1 = GetSha1(GenerateRandomString(lenght));
+            hash2 = GetSha1(GenerateRandomString(lenght));
+        }
+        else if (hashType == "SHA256")
+        {
+            hash1 = GetSha256(GenerateRandomString(lenght));
+            hash2 = GetSha256(GenerateRandomString(lenght));
+        }
+        else
+        {
+            Console.WriteLine("Wrong hash type");
+            return false;
+        }
 
         //File.AppendAllText("Tyrimas/collisionResults.txt", $"{hash1} - {hash2}\n");
         return hash1 == hash2 ? true : false;
@@ -55,7 +114,7 @@ public class Tyrimas
             .Select(_ => chars[random.Next(chars.Length)]).ToArray());
     }
 
-    public static void AvalancheEffect(int pairCount, int stringLength)
+    public static void AvalancheEffect(int pairCount, int stringLength, string hashType)
     {
         int minBitDiff = int.MaxValue, maxBitDiff = int.MinValue, totalBitDiff = 0;
         int minHexDiff = int.MaxValue, maxHexDiff = int.MinValue, totalHexDiff = 0;
@@ -70,6 +129,32 @@ public class Tyrimas
 
             string hash1 = Hashing.HashString(baseStr);
             string hash2 = Hashing.HashString(modStr);
+
+            if (hashType == "gab")
+            {
+                hash1 = Hashing.HashString(baseStr);
+                hash2 = Hashing.HashString(modStr);
+            }
+            else if (hashType == "MD5")
+            {
+                hash1 = GetMd5Hash(baseStr);
+                hash2 = GetMd5Hash(modStr);
+            }
+            else if (hashType == "SHA1")
+            {
+                hash1 = GetSha1(baseStr);
+                hash2 = GetSha1(modStr);
+            }
+            else if (hashType == "SHA256")
+            {
+                hash1 = GetSha256(baseStr);
+                hash2 = GetSha256(modStr);
+            }
+            else
+            {
+                Console.WriteLine("Wrong hash type");
+                return;
+            }
 
             byte[] hash1B = hash1.Select(c => Convert.ToByte(c)).ToArray();
             byte[] hash2B = hash2.Select(c => Convert.ToByte(c)).ToArray();
@@ -91,6 +176,7 @@ public class Tyrimas
             totalHexDiff += hexDiff;
         }
 
+        Console.WriteLine(hashType + ":\n");
         Console.WriteLine($"Bit difference: min={minBitDiff}, max={maxBitDiff}, avg={(double)totalBitDiff / pairCount}");
         Console.WriteLine($"Hex difference: min={minHexDiff}, max={maxHexDiff}, avg={(double)totalHexDiff / pairCount}");
     }
@@ -102,5 +188,50 @@ public class Tyrimas
         for (int i = 0; i < len; i += 2)
             bytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
         return bytes;
+    }
+
+    static string GetMd5Hash(string input)
+    {
+        using (MD5 md5 = MD5.Create())
+        {
+            byte[] inputBytes = Encoding.UTF8.GetBytes(input);
+            byte[] hashBytes = md5.ComputeHash(inputBytes);
+
+            StringBuilder sb = new StringBuilder();
+            foreach (byte b in hashBytes)
+                sb.Append(b.ToString("x2"));
+
+            return sb.ToString();
+        }
+    }
+
+    static string GetSha1(string input)
+    {
+        using (SHA1 sha1 = SHA1.Create())
+        {
+            byte[] inputBytes = Encoding.UTF8.GetBytes(input);
+            byte[] hashBytes = sha1.ComputeHash(inputBytes);
+
+            StringBuilder sb = new StringBuilder();
+            foreach (byte b in hashBytes)
+                sb.Append(b.ToString("x2"));
+
+            return sb.ToString();
+        }
+    }
+
+    static string GetSha256(string input)
+    {
+        using (SHA256 sha256 = SHA256.Create())
+        {
+            byte[] inputBytes = Encoding.UTF8.GetBytes(input);
+            byte[] hashBytes = sha256.ComputeHash(inputBytes);
+
+            StringBuilder sb = new StringBuilder();
+            foreach (byte b in hashBytes)
+                sb.Append(b.ToString("x2"));
+
+            return sb.ToString();
+        }
     }
 }
