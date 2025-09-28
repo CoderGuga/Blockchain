@@ -1,0 +1,18 @@
+gab:
+ Bit difference: min=26.5625, max=67.1875, avg=44.11915234375 
+ Hex difference: min=45.3125, max=90.625, avg=67.31385937499999 
+MD5:
+ Bit difference: min=19.140625, max=47.265625, avg=33.008363281250006 
+ Hex difference: min=34.375, max=50, avg=46.863937500000006 
+SHA1:
+ Bit difference: min=27.34375, max=55.078125, avg=41.25336328125 
+ Hex difference: min=43.75, max=62.5, avg=58.601046874999994 
+SHA256:
+ Bit difference: min=45.703125, max=82.8125, avg=66.0323828125 
+ Hex difference: min=78.125, max=100, avg=93.753078125 
+titoAI:
+ Bit difference: min=104.6875, max=157.42188, avg=132.01440234375 
+ Hex difference: min=165.625, max=200, avg=187.48625 
+tito:
+ Bit difference: min=22.65625, max=57.421875, avg=38.960859375 
+ Hex difference: min=34.375, max=50, avg=46.977140625000004 

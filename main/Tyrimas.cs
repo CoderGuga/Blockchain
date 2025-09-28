@@ -63,8 +63,7 @@ public class Tyrimas
             lineCount *= 2;
         }
 
-        Console.WriteLine(hashType + ":\n");
-        Console.WriteLine(result);
+        File.AppendAllText("tyrimas/efficiencyResults.txt", $"{hashType}:\n{ result} \n");
     }
 
     public static int RunPairCheck(int count, int lenght, string hashType)
@@ -78,8 +77,7 @@ public class Tyrimas
         }
 
 
-        Console.WriteLine(hashType + ":\n");
-        Console.WriteLine($"String lenght: {lenght} Collision count: {colCount}");
+        File.AppendAllText("tyrimas/collisionResults.txt", $"{hashType}:\n String lenght: {lenght} Collision count: {colCount} \n");
         return colCount;
     }
 
@@ -113,7 +111,7 @@ public class Tyrimas
             hash1 = StormHash.ComputeHash(GenerateRandomString(lenght));
             hash2 = StormHash.ComputeHash(GenerateRandomString(lenght));
         }
-        else if (hashType == "titoAI")
+        else if (hashType == "tito")
         {
             hash1 = Tito.Mixing(GenerateRandomString(lenght));
             hash2 = Tito.Mixing(GenerateRandomString(lenght));
@@ -140,6 +138,8 @@ public class Tyrimas
     {
         int minBitDiff = int.MaxValue, maxBitDiff = int.MinValue, totalBitDiff = 0;
         int minHexDiff = int.MaxValue, maxHexDiff = int.MinValue, totalHexDiff = 0;
+
+        float bitLenght = 256f, hexLenght = 64f;
 
         for (int i = 0; i < pairCount; i++)
         {
@@ -208,9 +208,7 @@ public class Tyrimas
             totalHexDiff += hexDiff;
         }
 
-        Console.WriteLine(hashType + ":\n");
-        Console.WriteLine($"Bit difference: min={minBitDiff}, max={maxBitDiff}, avg={(double)totalBitDiff / pairCount}");
-        Console.WriteLine($"Hex difference: min={minHexDiff}, max={maxHexDiff}, avg={(double)totalHexDiff / pairCount}");
+        File.AppendAllText("tyrimas/avalancheResults.txt", $"{hashType}:\n Bit difference: min={minBitDiff/bitLenght*100}, max={maxBitDiff/bitLenght*100}, avg={(double)totalBitDiff / pairCount/bitLenght*100} \n Hex difference: min={minHexDiff/hexLenght*100}, max={maxHexDiff/hexLenght*100}, avg={(double)totalHexDiff / pairCount/hexLenght*100} \n");
     }
 
     static byte[] HexStringToBytes(string hex)

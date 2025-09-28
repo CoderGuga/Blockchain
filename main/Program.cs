@@ -59,7 +59,7 @@ class Program
         Tyrimas.RunPairCheck(100000, 500, "SHA256");
         Tyrimas.RunPairCheck(100000, 1000, "SHA256");
 
-        Tyrimas.RunPairCheck(100000, 10, "titoAi");
+        Tyrimas.RunPairCheck(100000, 10, "titoAI");
         Tyrimas.RunPairCheck(100000, 100, "titoAI");
         Tyrimas.RunPairCheck(100000, 500, "titoAI");
         Tyrimas.RunPairCheck(100000, 1000, "titoAI");

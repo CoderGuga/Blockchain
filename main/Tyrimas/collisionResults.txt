@@ -1,57 +1,48 @@
-Lavinos efektas:
-gab pirmas:
-Bit difference: min=41, max=171, avg=104.50788
-Hex difference: min=22, max=63, avg=39.80696
-
-
 gab:
-
-Bit difference: min=47, max=171, avg=104.54838
-Hex difference: min=21, max=62, avg=39.85613  
-
-MD5:
-
-Bit difference: min=52, max=115, avg=84.48231
-Hex difference: min=21, max=32, avg=30.00056 
-
-SHA1:
-
-Bit difference: min=69, max=141, avg=105.65923
-Hex difference: min=29, max=40, avg=37.50927  
-
-SHA256:
-
-Bit difference: min=113, max=220, avg=168.95578
-Hex difference: min=50, max=64, avg=59.99545  
-
-
-
-Collision results:
-
+ String lenght: 10 Collision count: 0 
 gab:
-
-String lenght: 10 Collision count: 0
-String lenght: 100 Collision count: 0
-String lenght: 500 Collision count: 0
-String lenght: 1000 Collision count: 0
-
+ String lenght: 100 Collision count: 0 
+gab:
+ String lenght: 500 Collision count: 0 
+gab:
+ String lenght: 1000 Collision count: 0 
 MD5:
-
-String lenght: 10 Collision count: 0
-String lenght: 100 Collision count: 0
-String lenght: 500 Collision count: 0
-String lenght: 1000 Collision count: 0
-
+ String lenght: 10 Collision count: 0 
+MD5:
+ String lenght: 100 Collision count: 0 
+MD5:
+ String lenght: 500 Collision count: 0 
+MD5:
+ String lenght: 1000 Collision count: 0 
 SHA1:
-
-String lenght: 10 Collision count: 0
-String lenght: 100 Collision count: 0
-String lenght: 500 Collision count: 0
-String lenght: 1000 Collision count: 0
-
+ String lenght: 10 Collision count: 0 
+SHA1:
+ String lenght: 100 Collision count: 0 
+SHA1:
+ String lenght: 500 Collision count: 0 
+SHA1:
+ String lenght: 1000 Collision count: 0 
 SHA256:
-
-String lenght: 10 Collision count: 0
-String lenght: 100 Collision count: 0
-String lenght: 500 Collision count: 0
-String lenght: 1000 Collision count: 0
+ String lenght: 10 Collision count: 0 
+SHA256:
+ String lenght: 100 Collision count: 0 
+SHA256:
+ String lenght: 500 Collision count: 0 
+SHA256:
+ String lenght: 1000 Collision count: 0 
+titoAI:
+ String lenght: 10 Collision count: 0 
+titoAI:
+ String lenght: 100 Collision count: 0 
+titoAI:
+ String lenght: 500 Collision count: 0 
+titoAI:
+ String lenght: 1000 Collision count: 0 
+tito:
+ String lenght: 10 Collision count: 0 
+tito:
+ String lenght: 100 Collision count: 0 
+tito:
+ String lenght: 500 Collision count: 0 
+tito:
+ String lenght: 1000 Collision count: 0 
