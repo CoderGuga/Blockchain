@@ -42,6 +42,18 @@ public class Tyrimas
                 GetSha256(text);
                 sw.Stop();
             }
+            else if (hashType == "titoAI")
+            {
+                sw = Stopwatch.StartNew();
+                StormHash.ComputeHash(text);
+                sw.Stop();
+            }
+            else if (hashType == "tito")
+            {
+                sw = Stopwatch.StartNew();
+                Tito.Mixing(text);
+                sw.Stop();
+            }
             else
             {
                 Console.WriteLine("Wrong hash type");
@@ -96,6 +108,16 @@ public class Tyrimas
             hash1 = GetSha256(GenerateRandomString(lenght));
             hash2 = GetSha256(GenerateRandomString(lenght));
         }
+        else if (hashType == "titoAI")
+        {
+            hash1 = StormHash.ComputeHash(GenerateRandomString(lenght));
+            hash2 = StormHash.ComputeHash(GenerateRandomString(lenght));
+        }
+        else if (hashType == "titoAI")
+        {
+            hash1 = Tito.Mixing(GenerateRandomString(lenght));
+            hash2 = Tito.Mixing(GenerateRandomString(lenght));
+        }
         else
         {
             Console.WriteLine("Wrong hash type");
@@ -149,6 +171,16 @@ public class Tyrimas
             {
                 hash1 = GetSha256(baseStr);
                 hash2 = GetSha256(modStr);
+            }
+            else if (hashType == "titoAI")
+            {
+                hash1 = StormHash.ComputeHash(baseStr);
+                hash2 = StormHash.ComputeHash(modStr);
+            }
+            else if (hashType == "tito")
+            {
+                hash1 = Tito.Mixing(baseStr);
+                hash2 = Tito.Mixing(modStr);
             }
             else
             {
