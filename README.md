@@ -1,13 +1,20 @@
-Mano hasho stiprybės ir silpnybės:
+Musų hasho stiprybės ir silpnybės:
 
-Hash'as turi 0 kolizijų su darytais testais
-Lavinos efekto testas irgi rodo gerus rezultatus ir nusileidžia tik SHA256 algoritmui
+Kolizijos:
+Visi hash'ai turi 0 kolizijų su darytais testais
 
-Tačiau mano sukurtas hash'as yra gerokai lėtesnis už visus žymiuosius hash'us (keliasdešimt kartų)
+Lavinos efektas:
+gab hash rodo gerus rezultatus (67% skirtumas vidutiniškai)
+tito ir titoAI hashai rodo įspudingus rezultatus (93% skirtumas), tiek pat kiek SHA256
+
+Greitis:
+gab hash gerokai atsilieka greičio aspektu
+tito hash yra keletą kartų greitesnis, tačiau vistiek gerokai atsilieka nuo visų likusių
+titoAI hash dar keletą kartų greitesnis, tačiau vistiek nepasiekia populiariųjų hashų greičio
 
 
 
-Hashinimo funkcijos Pseudokodas:
+gab hashinimo funkcijos Pseudokodas:
 
 
 FUNCTION HashPipeline(text, length):
