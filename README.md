@@ -18,6 +18,7 @@ gab hashinimo funkcijos Pseudokodas:
 
 
 FUNCTION HashPipeline(text, length):
+
     // Step 1: initial hash
     hashBytes = GetHashString(text, length)
 
@@ -34,6 +35,7 @@ FUNCTION HashPipeline(text, length):
 
 
 FUNCTION GetHashString(text, length):
+
     bytes = UTF8_ENCODE(text)
 
     WHILE size(bytes) < length * 2:
@@ -57,6 +59,7 @@ FUNCTION GetHashString(text, length):
 
 
 FUNCTION XorArrays(a, b):
+
     length = MIN(size(a), size(b))
     result = NEW_ARRAY(length)
 
@@ -67,6 +70,7 @@ FUNCTION XorArrays(a, b):
 
 
 FUNCTION ShiftBytes(bytes, shiftN):
+
     number = CONVERT_TO_BIG_INTEGER(bytes)
     shiftedLeft = number << shiftN
     shiftedBytes = CONVERT_TO_BYTE_ARRAY(shiftedLeft)
@@ -76,6 +80,7 @@ FUNCTION ShiftBytes(bytes, shiftN):
 
 
 FUNCTION MultNumbers(bigInt):
+
     res = 1
     bytes = CONVERT_TO_BYTE_ARRAY(bigInt)
 
@@ -91,6 +96,7 @@ FUNCTION MultNumbers(bigInt):
 tito hash pseudokodas:
 
 function Mixing(input, output_size = 32, salt = "")
+
     data = concatenate(input, salt)
 
     output = array of bytes length output_size initialized to 0
@@ -121,17 +127,19 @@ end function
 
 
 function hex_char(nibble)
+
     if nibble < 10
         return character('0' + nibble)
     else
         return character('A' + (nibble - 10))
-end function
+    end function
     return res
 
 titoAI pseudokodas:
 
 
 function StormHash.ComputeHash(input)
+
     if input is null then input = ""
     data = UTF8Bytes(input)
 
@@ -157,6 +165,7 @@ end function
 
 
 function ProcessChunk(data, offset, hash)
+
     words[0..7] = 0
     for i from 0 to 7
         words[i] = BytesToULong(data, offset + i*8)
@@ -167,6 +176,7 @@ end function
 
 
 function ProcessFinalChunk(data, offset, remainingBytes, hash)
+
     finalChunk[64] = all zero
     if remainingBytes > 0
         copy remainingBytes from data[offset..] into finalChunk[0..]
@@ -181,6 +191,7 @@ end function
 
 
 function MixingRound(hash, words, round)
+
     temp[0..7] = hash[0..7]
 
     for i from 0 to 7
@@ -203,6 +214,7 @@ end function
 
 
 function FinalMix(hash)
+
     repeat 5 times (round = 0..4)
         for i from 0 to 7
             hash[i] = hash[i] XOR hash[(i+1) mod 8]
@@ -222,6 +234,7 @@ end function
 
 
 function BytesToULong(data, offset)
+
     result = 0
     for i from 0 to 7
         if offset + i < length(data)
@@ -231,11 +244,13 @@ end function
 
 
 function RotateLeft(value, bits)
+
     return (value << bits) OR (value >> (64 - bits))
 end function
 
 
 function CompressTo256(state)
+
     out[0..3] = 0
     for i from 0 to 3
         out[i] = state[i] XOR RotateLeft(state[i+4], (i*13) mod 64) XOR (PRIME3 + i*0x9E)
@@ -247,6 +262,7 @@ end function
 
 
 function HashToHexString(hash)
+
     string = ""
     for each value in hash
         append value formatted as 16 hex digits to string
