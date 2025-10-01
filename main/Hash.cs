@@ -5,7 +5,7 @@ using System.Numerics;
 
 public class Hashing
 {
-    public static void Hash(string text)
+    public static string Hash(string text)
     {
         byte[] hash = GetHashString(text, 32);
         BigInteger bigInteger = new BigInteger(hash);
@@ -14,8 +14,10 @@ public class Hashing
 
         string hexString = BitConverter.ToString(hash).Replace("-", "");
 
-        Console.WriteLine("Hash:");
-        Console.WriteLine(hexString + "\n");
+        return hexString;
+
+       // Console.WriteLine("Hash:");
+        //Console.WriteLine(hexString + "\n");
     }
 
     public static string HashString(string text)

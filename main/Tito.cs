@@ -54,7 +54,7 @@ public class Tito
         return 0;
     }
 
-    public static string Mixing(string input, int output_size = 16, string salt = "")
+    public static string Mixing(string input, int output_size = 32, string salt = "")
     {
         // prijungiam salt
         string data = input + salt;

@@ -7,7 +7,16 @@ class Program
 {
     static void Main()
     {
-        FullTest();
+        string input = "";
+        while (input != "1" && input != "2")
+        {
+            Console.WriteLine("1 for input, 2 for full test");
+            input = Console.ReadLine();
+            if (input == "1")
+                InputText();
+            if (input == "2")
+                FullTest();
+        }
     }
 
     static void FullTest()
@@ -72,10 +81,10 @@ class Program
 
     static void InputText()
     {
-        Console.WriteLine("Skaityti is failo: 1\nSkaityti komandine eilute: 2");
+        Console.WriteLine("1 - Skaityti is failo, 2 - Skaityti komandine eilute");
         string? input = Console.ReadLine();
 
-        string? text;
+        string? text = "";
         while (input != "1" && input != "2")
         {
             Console.WriteLine("Iveskite 1 arba 2");
@@ -88,12 +97,28 @@ class Program
             string? filePath = Console.ReadLine();
             text = File.ReadAllText(filePath);
         }
-        else
+        else if (input == "2")
         {
             Console.WriteLine("Iveskite norima teksta");
             text = Console.ReadLine();
         }
 
-        Hashing.Hash(text);
+        Console.WriteLine("1 - gab hash, 2 - tito hash, 3 - AI hash");
+        string? type = Console.ReadLine();
+        while (type != "1" && type != "2" && type != "3")
+        {
+            Console.WriteLine("Iveskite 1, 2 arba 3");
+            type = Console.ReadLine();
+        }
+        string answer = "";
+        if (type == "1")
+            answer = Hashing.Hash(text);
+        else if (type == "2")
+            answer = Tito.Mixing(text);
+        else if (type == "3")
+            answer = StormHash.ComputeHash(text);
+
+        Console.WriteLine($"Hash: \n{answer}");
+        
     }
 }
