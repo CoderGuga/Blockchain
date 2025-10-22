@@ -31,10 +31,21 @@ public class User
     public List<UTXO> GetOwnedUTXOs() => UTXO.UTXOs.Where(u => u.GetOwnerKey() == publicKey).ToList();
     public List<UTXO> GetUnspentUTXOs() => UTXO.UTXOs.Where(u => u.GetOwnerKey() == publicKey && u.IsUnspent()).ToList();
 
-    private static readonly char[] chars =
+    public void MakeTransaction(string receiver, int amount)
+    {
+        if (amount > GetBalance())
+            Console.WriteLine("Bro, you poor");
+        else
+            new Transaction(publicKey, receiver, amount, FindUTXOs(amount));
+    }
+
+
+
+    //helper func
+    private readonly char[] chars =
         "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".ToCharArray();
 
-    private static string GenerateRandomName(int min, int max)
+    private string GenerateRandomName(int min, int max)
     {
         max++;
         int length = RandomNumberGenerator.GetInt32(min, max); // 5..10 inclusive
@@ -46,10 +57,27 @@ public class User
         return sb.ToString();
     }
 
-    private static string GenPublicKey()
+    private string GenPublicKey()
     {
         using var rsa = RSA.Create(2048);
         var publicKey = Convert.ToBase64String(rsa.ExportSubjectPublicKeyInfo());
         return publicKey;
+    }
+
+    private List<UTXO> FindUTXOs(int amount)
+    {
+        int currentAmount = 0;
+        List<UTXO> usedUTXOs = new();
+
+        foreach (UTXO uTXO in GetUnspentUTXOs())
+        {
+            currentAmount += uTXO.GetAmount();
+            usedUTXOs.Add(uTXO);
+
+            if (currentAmount >= amount)
+                return usedUTXOs;
+        }
+        
+        return usedUTXOs;
     }
 }

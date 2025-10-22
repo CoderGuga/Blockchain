@@ -5,9 +5,13 @@ class Program
 {
     static void Main()
     {
-        User user = new User();
-        Console.WriteLine($"Name: {user.GetName()}");
-        Console.WriteLine($"PublicKey: {user.GetPublicKey()}");
-        Console.WriteLine($"Balance: {user.GetBalance()}");
+        User user1 = new User();
+        User user2 = new User();
+
+        Console.WriteLine($"user1 money {user1.GetBalance()}, user2 money {user2.GetBalance()}");
+
+        user1.MakeTransaction(user2.GetPublicKey(), user1.GetBalance());
+
+        Console.WriteLine($"user1 money {user1.GetBalance()}, user2 money {user2.GetBalance()}, transaction {Transaction.unconfirmedTransactions[0].GetAmount()}");
     }
 }

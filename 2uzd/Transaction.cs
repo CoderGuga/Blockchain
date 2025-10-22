@@ -9,7 +9,7 @@ public class Transaction
 
     public Transaction(string _sender, string _receiver, int _amount, List<UTXO> _inputs)
     {
-        transaction_id = confirmedTransactions.Count + unconfirmedTransactions.Count - 1;
+        transaction_id = confirmedTransactions.Count + unconfirmedTransactions.Count;
         sender = _sender;
         receiver = _receiver;
         amount = _amount;
