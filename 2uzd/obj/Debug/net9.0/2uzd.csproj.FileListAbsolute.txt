@@ -1,0 +1,15 @@
+D:\BlockChainas\2uzd\bin\Debug\net9.0\2uzd.exe
+D:\BlockChainas\2uzd\bin\Debug\net9.0\2uzd.deps.json
+D:\BlockChainas\2uzd\bin\Debug\net9.0\2uzd.runtimeconfig.json
+D:\BlockChainas\2uzd\bin\Debug\net9.0\2uzd.dll
+D:\BlockChainas\2uzd\bin\Debug\net9.0\2uzd.pdb
+D:\BlockChainas\2uzd\obj\Debug\net9.0\2uzd.GeneratedMSBuildEditorConfig.editorconfig
+D:\BlockChainas\2uzd\obj\Debug\net9.0\2uzd.AssemblyInfoInputs.cache
+D:\BlockChainas\2uzd\obj\Debug\net9.0\2uzd.AssemblyInfo.cs
+D:\BlockChainas\2uzd\obj\Debug\net9.0\2uzd.csproj.CoreCompileInputs.cache
+D:\BlockChainas\2uzd\obj\Debug\net9.0\2uzd.sourcelink.json
+D:\BlockChainas\2uzd\obj\Debug\net9.0\2uzd.dll
+D:\BlockChainas\2uzd\obj\Debug\net9.0\refint\2uzd.dll
+D:\BlockChainas\2uzd\obj\Debug\net9.0\2uzd.pdb
+D:\BlockChainas\2uzd\obj\Debug\net9.0\2uzd.genruntimeconfig.cache
+D:\BlockChainas\2uzd\obj\Debug\net9.0\ref\2uzd.dll
