@@ -5,7 +5,6 @@ using System.Text;
 public class User
 {
     public static List<User> users = new();
-    static List<UTXO> ownedUTXOs = new(), unspentUTXOs = new();
     string name;
     string publicKey;
 
@@ -14,7 +13,6 @@ public class User
         name = GenerateRandomName(5, 10);
         publicKey = GenPublicKey();
         UTXO uTXO = new UTXO(publicKey, RandomNumberGenerator.GetInt32(100, 1000000));
-        ownedUTXOs.Add(uTXO);
         UTXO.UTXOs.Add(uTXO);
         users.Add(this);
     }
@@ -24,12 +22,14 @@ public class User
     public int GetBalance()
     {
         int balance = 0;
-        foreach (UTXO uTXO in ownedUTXOs)
+        foreach (UTXO uTXO in GetUnspentUTXOs())
         {
             balance += uTXO.GetAmount();
         }
         return balance;
     }
+    public List<UTXO> GetOwnedUTXOs() => UTXO.UTXOs.Where(u => u.GetOwnerKey() == publicKey).ToList();
+    public List<UTXO> GetUnspentUTXOs() => UTXO.UTXOs.Where(u => u.GetOwnerKey() == publicKey && u.IsUnspent()).ToList();
 
     private static readonly char[] chars =
         "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".ToCharArray();

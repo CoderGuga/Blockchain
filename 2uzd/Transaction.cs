@@ -26,7 +26,7 @@ public class Transaction
     }
 
         // TryCreate pattern: returns true and an instance when conditions met
-    public static bool TryCreate(string _sender, string _receiver, int _amount, List<UTXO> _inputs, out Transaction tx)
+    public static bool TryCreate(string _sender, string _receiver, int _amount, List<UTXO> _inputs, out Transaction? tx)
     {
         List<UTXO> unspentUTXOs = new();
         foreach (UTXO uTXO in _inputs)
@@ -47,7 +47,7 @@ public class Transaction
     }
 
     // Convenience factory that returns null on failure
-    public static Transaction CreateOrNull(string _sender, string _receiver, int _amount, List<UTXO> _inputs)
+    public static Transaction? CreateOrNull(string _sender, string _receiver, int _amount, List<UTXO> _inputs)
     {
         return TryCreate(_sender, _receiver, _amount, _inputs, out var tx) ? tx : null;
     }
