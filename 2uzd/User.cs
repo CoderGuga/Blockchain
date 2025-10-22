@@ -36,7 +36,7 @@ public class User
         if (amount > GetBalance())
             Console.WriteLine("Bro, you poor");
         else
-            new Transaction(publicKey, receiver, amount, FindUTXOs(amount));
+            Transaction.CreateOrNull(publicKey, receiver, amount, FindUTXOs(amount));
     }
 
 

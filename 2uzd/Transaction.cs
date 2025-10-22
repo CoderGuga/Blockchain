@@ -7,7 +7,7 @@ public class Transaction
     int amount;
     List<UTXO> inputs, outputs;
 
-    public Transaction(string _sender, string _receiver, int _amount, List<UTXO> _inputs)
+    private Transaction(string _sender, string _receiver, int _amount, List<UTXO> _inputs)
     {
         transaction_id = confirmedTransactions.Count + unconfirmedTransactions.Count;
         sender = _sender;
@@ -23,6 +23,8 @@ public class Transaction
             uTXO.Spend();
 
         unconfirmedTransactions.Add(this);
+
+        Console.WriteLine($"Transaction ID: {transaction_id}\nSender: {sender}\nReceiver: {receiver}\nAmount: {amount}\nInput Count: {inputs.Count}\nInputs: {UXTOListToID(inputs)}\nOutput Count: {outputs.Count}\nOutputs: {UXTOListToID(outputs)}");
     }
 
         // TryCreate pattern: returns true and an instance when conditions met
@@ -60,6 +62,26 @@ public class Transaction
             balance += uTXO.GetAmount();
         }
         return balance;
+    }
+
+    private string UXTOListToString(List<UTXO> uTXOs)
+    {
+        string output = "";
+        foreach (UTXO uTXO in uTXOs)
+        {
+            output += uTXO.GetOwnerKey() + " ";
+        }
+        return output;
+    }
+
+    private string UXTOListToID(List<UTXO> uTXOs)
+    {
+        string output = "";
+        foreach (UTXO uTXO in uTXOs)
+        {
+            output += uTXO.GetId() + " ";
+        }
+        return output;
     }
 
     // accessors (one-line)
