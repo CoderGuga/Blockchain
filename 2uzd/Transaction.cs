@@ -1,6 +1,6 @@
 public class Transaction
 {
-    public static List<Transaction> confirmedTransactions = new(), unconfirmedTransactions = new();
+    public static List<Transaction> confirmedTransactions = new(), unconfirmedTransactions = new(); // o cia visos egzistuojancio transakcijos (confirmed tos, kurios yra idetos i bloka, uncomfirmed, kurios neidetos dar)
     int transaction_id;
     string sender;
     string receiver;
@@ -9,11 +9,13 @@ public class Transaction
 
     private Transaction(string _sender, string _receiver, int _amount, List<UTXO> _inputs)
     {
+        //konstruktorius automatiskai viska sudeda, paspendina visus sunaudotus UTXOs ir grazina dar, jei yra per daug
         transaction_id = confirmedTransactions.Count + unconfirmedTransactions.Count;
         sender = _sender;
         receiver = _receiver;
         amount = _amount;
         inputs = _inputs;
+
         int amountSpent = CountAmount(_inputs);
         outputs = new List<UTXO>{ new UTXO(_receiver, _amount) };
         if (_amount < amountSpent)
@@ -24,10 +26,10 @@ public class Transaction
 
         unconfirmedTransactions.Add(this);
 
-        Console.WriteLine($"Transaction ID: {transaction_id}\nSender: {sender}\nReceiver: {receiver}\nAmount: {amount}\nInput Count: {inputs.Count}\nInputs: {UXTOListToID(inputs)}\nOutput Count: {outputs.Count}\nOutputs: {UXTOListToID(outputs)}");
+        Console.WriteLine($"Transaction ID: {transaction_id}\nAmount: {amount}\nInput Count: {inputs.Count}\nInputs: {UXTOListToString(inputs)}\nOutput Count: {outputs.Count}\nOutputs: {UXTOListToString(outputs)}");
     }
 
-        // TryCreate pattern: returns true and an instance when conditions met
+        // sita arba CreateOrNull apacioj naudoti transakciju kurimui (priklausomai nuo to ar reikia bool, ar Transaction gauti)
     public static bool TryCreate(string _sender, string _receiver, int _amount, List<UTXO> _inputs, out Transaction? tx)
     {
         List<UTXO> unspentUTXOs = new();
@@ -48,12 +50,14 @@ public class Transaction
         return true;
     }
 
-    // Convenience factory that returns null on failure
+    // sita reikia vartoti vietoj construktoriaus, nes kitaip neimanoma patikrinti, ar ciuvakas turi pinigu isvis daryti tokia transakcija
     public static Transaction? CreateOrNull(string _sender, string _receiver, int _amount, List<UTXO> _inputs)
     {
         return TryCreate(_sender, _receiver, _amount, _inputs, out var tx) ? tx : null;
     }
 
+
+    //cia pagalbines funkcijos, tai nesvarbu
     private static int CountAmount(List<UTXO> uTXOs)
     {
         int balance = 0;
@@ -69,7 +73,7 @@ public class Transaction
         string output = "";
         foreach (UTXO uTXO in uTXOs)
         {
-            output += uTXO.GetOwnerKey() + " ";
+            output += uTXO.GetOwnerKey() + "\n\n";
         }
         return output;
     }
@@ -79,7 +83,7 @@ public class Transaction
         string output = "";
         foreach (UTXO uTXO in uTXOs)
         {
-            output += uTXO.GetId() + " ";
+            output += uTXO.GetId() + "\n";
         }
         return output;
     }

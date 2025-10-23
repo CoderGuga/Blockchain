@@ -4,7 +4,7 @@ using System.Text;
 // cia userio klase, kuri auto pasibuildina su User() konstruktoriumi
 public class User
 {
-    public static List<User> users = new();
+    public static List<User> users = new(); //cia irgi, viesa visu egzistuojanciu useriu duombaze
     string name;
     string publicKey;
 
@@ -12,10 +12,23 @@ public class User
     {
         name = GenerateRandomName(5, 10);
         publicKey = GenPublicKey();
-        UTXO uTXO = new UTXO(publicKey, RandomNumberGenerator.GetInt32(100, 1000000));
-        UTXO.UTXOs.Add(uTXO);
+        new UTXO(publicKey, RandomNumberGenerator.GetInt32(100, 1000000));
         users.Add(this);
     }
+
+
+    public void MakeTransaction(string receiver, int amount)
+    {
+        if (amount > GetBalance())
+            Console.WriteLine("Bro, you poor");
+        else
+        {
+            Transaction.CreateOrNull(publicKey, receiver, amount, FindUTXOs(amount));
+        }
+    }
+
+
+//accesoriai
 
     public string GetName() => name;
     public string GetPublicKey() => publicKey;
@@ -30,15 +43,6 @@ public class User
     }
     public List<UTXO> GetOwnedUTXOs() => UTXO.UTXOs.Where(u => u.GetOwnerKey() == publicKey).ToList();
     public List<UTXO> GetUnspentUTXOs() => UTXO.UTXOs.Where(u => u.GetOwnerKey() == publicKey && u.IsUnspent()).ToList();
-
-    public void MakeTransaction(string receiver, int amount)
-    {
-        if (amount > GetBalance())
-            Console.WriteLine("Bro, you poor");
-        else
-            Transaction.CreateOrNull(publicKey, receiver, amount, FindUTXOs(amount));
-    }
-
 
 
     //helper func

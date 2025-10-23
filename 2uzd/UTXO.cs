@@ -1,6 +1,9 @@
 public class UTXO
 {
-    public static List<UTXO> UTXOs = new();
+
+    public static List<UTXO> UTXOs = new();     //zodziu, cia yra yra egzistuojantys UTXOs, kurie yra prieinami visam pasauliui (todel static)
+
+    //kiekvienas UTXO turi situs fields
     int id;
     string ownerKey;
     int amount;
