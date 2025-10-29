@@ -79,6 +79,10 @@ namespace BlockchainSimulation
             if (!sender.HasSufficientBalance(transaction.Amount))
                 return false;
 
+            // Reserve inputs so they cannot be double-spent by other pending TXs
+            if (!transaction.ReserveInputs())
+                return false;
+
             PendingTransactions.Add(transaction);
             return true;
         }
@@ -131,14 +135,13 @@ namespace BlockchainSimulation
         /// Atnaujina balansus 
         private void UpdateBalances(List<Transaction> transactions)
         {
-            foreach (var tx in transactions)
-            {
-                if (Users.ContainsKey(tx.Sender) && Users.ContainsKey(tx.Receiver))
+                foreach (var tx in transactions)
                 {
-                    Users[tx.Sender].Debit(tx.Amount);
-                    Users[tx.Receiver].Credit(tx.Amount);
+                    // Transactions were already reserved (inputs spent) and outputs
+                    // created when the transaction was accepted. Here we simply
+                    // confirm them (move from unconfirmed to confirmed list).
+                    tx.Confirm();
                 }
-            }
         }
 
         

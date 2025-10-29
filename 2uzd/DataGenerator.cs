@@ -110,12 +110,20 @@ namespace BlockchainSimulation
                             if (accumulated >= intAmount) break;
                         }
 
-                        // Try to create transaction using selected inputs (this will mark inputs as spent)
+                        // Try to create transaction using selected inputs
                         var tx = Transaction.CreateOrNull(sender.PublicKey, receiver.PublicKey, intAmount, inputs);
                         if (tx != null)
                         {
-                            transactions.Add(tx);
-                            validTransactions++;
+                            // Reserve inputs immediately so generated TXs don't double-spend UTXOs
+                            if (tx.ReserveInputs())
+                            {
+                                transactions.Add(tx);
+                                validTransactions++;
+                            }
+                            else
+                            {
+                                invalidTransactions++;
+                            }
                         }
                         else
                         {

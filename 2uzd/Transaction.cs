@@ -16,6 +16,7 @@ namespace BlockchainSimulation
         public List<UTXO> Inputs { get; private set; } = null!;
         public List<UTXO> Outputs { get; private set; } = null!;
         public bool IsValid { get; private set; }
+    private bool _inputsReserved = false;
         
         public bool Validate() => ValidateTransaction();
 
@@ -26,55 +27,78 @@ namespace BlockchainSimulation
             Amount = amount;
             TransactionId = confirmedTransactions.Count + unconfirmedTransactions.Count;
             Inputs = new List<UTXO>();
-            Outputs = new List<UTXO> { new UTXO(receiver, amount) };
+            Outputs = new List<UTXO>();
             IsValid = true;
             unconfirmedTransactions.Add(this);
         }
 
         private Transaction(string sender, string receiver, int amount, List<UTXO> inputs)
+            : this(sender, receiver, amount)
         {
-            TransactionId = confirmedTransactions.Count + unconfirmedTransactions.Count;
-            Sender = sender;
-            Receiver = receiver;
-            Amount = amount;
-            Inputs = inputs ?? new List<UTXO>();
-
-            if (Inputs.Count > 0)
-            {
-                int amountSpent = CountAmount(Inputs);
-                Outputs = new List<UTXO> { new UTXO(Receiver, Amount) };
-                if (Amount < amountSpent)
-                    Outputs.Add(new UTXO(Sender, amountSpent - Amount));
-
-                foreach (UTXO utxo in Inputs)
-                    utxo.Spend();
-            }
-            else
-            {
-                Outputs = new List<UTXO> { new UTXO(Receiver, Amount) };
-            }
-
+            SetInputs(inputs);
             IsValid = ValidateTransaction();
-            unconfirmedTransactions.Add(this);
+        }
+
+        /// Set transaction inputs and compute outputs (including change UTXO if needed).
+        public void SetInputs(List<UTXO> inputs)
+        {
+            Inputs = inputs ?? new List<UTXO>();
+            Outputs = new List<UTXO> { new UTXO(Receiver, Amount) };
+            int amountSpent = CountAmount(Inputs);
+            if (amountSpent > Amount)
+                Outputs.Add(new UTXO(Sender, amountSpent - Amount));
+            // Reset reservation flag when inputs change
+            _inputsReserved = false;
+            IsValid = ValidateTransaction();
+        }
+
+        /// Attempt to reserve (spend) the input UTXOs for this transaction.
+        /// Returns true if all inputs were unspent and are now marked spent.
+        public bool ReserveInputs()
+        {
+            if (Inputs == null || Inputs.Count == 0)
+                return true;
+
+            if (_inputsReserved)
+                return true;
+
+            // Check all inputs are still unspent
+            foreach (var u in Inputs)
+            {
+                if (!u.IsUnspent())
+                    return false;
+            }
+
+            // Mark them as spent
+            foreach (var u in Inputs)
+                u.Spend();
+
+            _inputsReserved = true;
+            return true;
+        }
+
+        /// Confirm transaction (move from unconfirmed to confirmed)
+        public void Confirm()
+        {
+            if (unconfirmedTransactions.Contains(this))
+            {
+                unconfirmedTransactions.Remove(this);
+                confirmedTransactions.Add(this);
+            }
         }
 
         public static bool TryCreate(string sender, string receiver, int amount, List<UTXO> inputs, out Transaction tx)
         {
-            List<UTXO> unspentUTXOs = new();
-            foreach (UTXO utxo in inputs)
-            {
-                if (utxo.IsUnspent())
-                    unspentUTXOs.Add(utxo);
-            }
-
-                tx = null!;
+            tx = null!;
             if (inputs == null || inputs.Count == 0) return false;
 
+            // Only consider currently unspent UTXOs from the provided list
+            List<UTXO> unspentUTXOs = inputs.Where(u => u.IsUnspent()).ToList();
             int sum = CountAmount(unspentUTXOs);
-
             if (sum < amount) return false;
 
-            tx = new Transaction(sender, receiver, amount, inputs);
+            tx = new Transaction(sender, receiver, amount);
+            tx.SetInputs(unspentUTXOs);
             return true;
         }
 
@@ -97,7 +121,9 @@ namespace BlockchainSimulation
                 if (totalInput < Amount)
                     return false;
 
-                if (Inputs.Any(i => !i.IsUnspent()))
+                // If inputs were already reserved by this transaction, allow them
+                // (they will be marked spent). Otherwise ensure inputs are unspent.
+                if (!_inputsReserved && Inputs.Any(i => !i.IsUnspent()))
                     return false;
             }
 
