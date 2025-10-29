@@ -36,7 +36,7 @@ namespace BlockchainSimulation
         private string CalculateMerkleRoot()
         {
             if (Transactions.Count == 0)
-                return TitoAi.Hash("empty");
+                return TitoAI.Hash("empty");
 
             StringBuilder allTxHashes = new StringBuilder();
             foreach (var tx in Transactions)
@@ -44,7 +44,7 @@ namespace BlockchainSimulation
                 allTxHashes.Append(tx.TransactionId);
             }
             
-            return TitoAi.Hash(allTxHashes.ToString());
+            return TitoAI.Hash(allTxHashes.ToString());
         }
 
        
@@ -105,7 +105,7 @@ namespace BlockchainSimulation
             // Validuoti transakcijas
             foreach (var tx in Transactions)
             {
-                if (!tx.IsValid())
+                 if (!tx.Validate())
                     return false;
             }
 

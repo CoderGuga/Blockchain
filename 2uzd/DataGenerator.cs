@@ -96,17 +96,31 @@ namespace BlockchainSimulation
                     decimal amount = (decimal)(random.NextDouble() * (double)maxAmount) + 0.01m;
                     amount = Math.Round(amount, 2);
 
-                    // Patikrinti balansą
+                    // Patikrinti balansą ir surinkti UTXO įvestis
+                    int intAmount = (int)amount;
                     if (sender.Balance >= amount)
                     {
-                        Transaction transaction = new Transaction(
-                            sender.PublicKey,
-                            receiver.PublicKey,
-                            amount
-                        );
-                        
-                        transactions.Add(transaction);
-                        validTransactions++;
+                        // Select unspent UTXOs until amount reached
+                        List<UTXO> inputs = new List<UTXO>();
+                        int accumulated = 0;
+                        foreach (var u in sender.UnspentUTXOs)
+                        {
+                            inputs.Add(u);
+                            accumulated += u.GetAmount();
+                            if (accumulated >= intAmount) break;
+                        }
+
+                        // Try to create transaction using selected inputs (this will mark inputs as spent)
+                        var tx = Transaction.CreateOrNull(sender.PublicKey, receiver.PublicKey, intAmount, inputs);
+                        if (tx != null)
+                        {
+                            transactions.Add(tx);
+                            validTransactions++;
+                        }
+                        else
+                        {
+                            invalidTransactions++;
+                        }
                     }
                     else
                     {

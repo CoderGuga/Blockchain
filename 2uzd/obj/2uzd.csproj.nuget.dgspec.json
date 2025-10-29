@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\BlockChainas\\2uzd\\2uzd.csproj": {}
+    "C:\\Users\\titas\\Documents\\mokslai\\blockchain\\Blockchain\\2uzd\\2uzd.csproj": {}
   },
   "projects": {
-    "D:\\BlockChainas\\2uzd\\2uzd.csproj": {
+    "C:\\Users\\titas\\Documents\\mokslai\\blockchain\\Blockchain\\2uzd\\2uzd.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\BlockChainas\\2uzd\\2uzd.csproj",
+        "projectUniqueName": "C:\\Users\\titas\\Documents\\mokslai\\blockchain\\Blockchain\\2uzd\\2uzd.csproj",
         "projectName": "2uzd",
-        "projectPath": "D:\\BlockChainas\\2uzd\\2uzd.csproj",
-        "packagesPath": "C:\\Users\\gabri\\.nuget\\packages\\",
-        "outputPath": "D:\\BlockChainas\\2uzd\\obj\\",
+        "projectPath": "C:\\Users\\titas\\Documents\\mokslai\\blockchain\\Blockchain\\2uzd\\2uzd.csproj",
+        "packagesPath": "C:\\Users\\titas\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\titas\\Documents\\mokslai\\blockchain\\Blockchain\\2uzd\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\gabri\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\titas\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
@@ -38,7 +38,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.200"
+        "SdkAnalysisLevel": "9.0.300"
       },
       "frameworks": {
         "net9.0": {
@@ -59,7 +59,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.202/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.306/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

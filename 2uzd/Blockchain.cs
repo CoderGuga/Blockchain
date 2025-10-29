@@ -63,7 +63,7 @@ namespace BlockchainSimulation
         /// Prideda transakciją į laukiančių sąrašą
         public bool AddTransaction(Transaction transaction)
         {
-            if (transaction == null || !transaction.IsValid())
+            if (transaction == null || !transaction.Validate())
                 return false;
 
             // Patikrinti siuntėją

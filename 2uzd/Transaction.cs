@@ -1,98 +1,122 @@
-public class Transaction
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace BlockchainSimulation
 {
-    public static List<Transaction> confirmedTransactions = new(), unconfirmedTransactions = new(); // o cia visos egzistuojancio transakcijos (confirmed tos, kurios yra idetos i bloka, uncomfirmed, kurios neidetos dar)
-    int transaction_id;
-    string sender;
-    string receiver;
-    int amount;
-    List<UTXO> inputs, outputs;
-
-    private Transaction(string _sender, string _receiver, int _amount, List<UTXO> _inputs)
+    public class Transaction
     {
-        //konstruktorius automatiskai viska sudeda, paspendina visus sunaudotus UTXOs ir grazina dar, jei yra per daug
-        transaction_id = confirmedTransactions.Count + unconfirmedTransactions.Count;
-        sender = _sender;
-        receiver = _receiver;
-        amount = _amount;
-        inputs = _inputs;
-
-        int amountSpent = CountAmount(_inputs);
-        outputs = new List<UTXO>{ new UTXO(_receiver, _amount) };
-        if (_amount < amountSpent)
-            outputs.Add(new UTXO(sender, amountSpent - amount));
-
-        foreach (UTXO uTXO in _inputs)
-            uTXO.Spend();
-
-        unconfirmedTransactions.Add(this);
-
-        Console.WriteLine($"Transaction ID: {transaction_id}\nAmount: {amount}\nInput Count: {inputs.Count}\nInputs: {UXTOListToString(inputs)}\nOutput Count: {outputs.Count}\nOutputs: {UXTOListToString(outputs)}");
-    }
-
-        // sita arba CreateOrNull apacioj naudoti transakciju kurimui (priklausomai nuo to ar reikia bool, ar Transaction gauti)
-    public static bool TryCreate(string _sender, string _receiver, int _amount, List<UTXO> _inputs, out Transaction? tx)
-    {
-        List<UTXO> unspentUTXOs = new();
-        foreach (UTXO uTXO in _inputs)
-        {
-            if (uTXO.IsUnspent())
-                unspentUTXOs.Add(uTXO);
-        }
+        public static List<Transaction> confirmedTransactions = new List<Transaction>();
+        public static List<Transaction> unconfirmedTransactions = new List<Transaction>();
         
-        tx = null;
-        if (_inputs == null || _inputs.Count == 0) return false;
+        public int TransactionId { get; private set; }
+        public string Sender { get; private set; } = null!;
+        public string Receiver { get; private set; } = null!;
+        public int Amount { get; private set; }
+        public List<UTXO> Inputs { get; private set; } = null!;
+        public List<UTXO> Outputs { get; private set; } = null!;
+        public bool IsValid { get; private set; }
+        
+        public bool Validate() => ValidateTransaction();
 
-        int sum = CountAmount(unspentUTXOs);
-
-        if (sum < _amount) return false;
-
-        tx = new Transaction(_sender, _receiver, _amount, _inputs);
-        return true;
-    }
-
-    // sita reikia vartoti vietoj construktoriaus, nes kitaip neimanoma patikrinti, ar ciuvakas turi pinigu isvis daryti tokia transakcija
-    public static Transaction? CreateOrNull(string _sender, string _receiver, int _amount, List<UTXO> _inputs)
-    {
-        return TryCreate(_sender, _receiver, _amount, _inputs, out var tx) ? tx : null;
-    }
-
-
-    //cia pagalbines funkcijos, tai nesvarbu
-    private static int CountAmount(List<UTXO> uTXOs)
-    {
-        int balance = 0;
-        foreach (UTXO uTXO in uTXOs)
+        public Transaction(string sender, string receiver, int amount)
         {
-            balance += uTXO.GetAmount();
+            Sender = sender;
+            Receiver = receiver;
+            Amount = amount;
+            TransactionId = confirmedTransactions.Count + unconfirmedTransactions.Count;
+            Inputs = new List<UTXO>();
+            Outputs = new List<UTXO> { new UTXO(receiver, amount) };
+            IsValid = true;
+            unconfirmedTransactions.Add(this);
         }
-        return balance;
-    }
 
-    private string UXTOListToString(List<UTXO> uTXOs)
-    {
-        string output = "";
-        foreach (UTXO uTXO in uTXOs)
+        private Transaction(string sender, string receiver, int amount, List<UTXO> inputs)
         {
-            output += uTXO.GetOwnerKey() + "\n\n";
-        }
-        return output;
-    }
+            TransactionId = confirmedTransactions.Count + unconfirmedTransactions.Count;
+            Sender = sender;
+            Receiver = receiver;
+            Amount = amount;
+            Inputs = inputs ?? new List<UTXO>();
 
-    private string UXTOListToID(List<UTXO> uTXOs)
-    {
-        string output = "";
-        foreach (UTXO uTXO in uTXOs)
+            if (Inputs.Count > 0)
+            {
+                int amountSpent = CountAmount(Inputs);
+                Outputs = new List<UTXO> { new UTXO(Receiver, Amount) };
+                if (Amount < amountSpent)
+                    Outputs.Add(new UTXO(Sender, amountSpent - Amount));
+
+                foreach (UTXO utxo in Inputs)
+                    utxo.Spend();
+            }
+            else
+            {
+                Outputs = new List<UTXO> { new UTXO(Receiver, Amount) };
+            }
+
+            IsValid = ValidateTransaction();
+            unconfirmedTransactions.Add(this);
+        }
+
+        public static bool TryCreate(string sender, string receiver, int amount, List<UTXO> inputs, out Transaction tx)
         {
-            output += uTXO.GetId() + "\n";
-        }
-        return output;
-    }
+            List<UTXO> unspentUTXOs = new();
+            foreach (UTXO utxo in inputs)
+            {
+                if (utxo.IsUnspent())
+                    unspentUTXOs.Add(utxo);
+            }
 
-    // accessors (one-line)
-    public int GetId() => transaction_id;
-    public string GetSender() => sender;
-    public string GetReceiver() => receiver;
-    public int GetAmount() => amount;
-    public List<UTXO> GetInputs() => inputs;
-    public List<UTXO> GetOutputs() => outputs;
+                tx = null!;
+            if (inputs == null || inputs.Count == 0) return false;
+
+            int sum = CountAmount(unspentUTXOs);
+
+            if (sum < amount) return false;
+
+            tx = new Transaction(sender, receiver, amount, inputs);
+            return true;
+        }
+
+        public static Transaction? CreateOrNull(string sender, string receiver, int amount, List<UTXO> inputs)
+        {
+            return TryCreate(sender, receiver, amount, inputs, out var tx) ? tx : null;
+        }
+
+        private bool ValidateTransaction()
+        {
+            if (string.IsNullOrEmpty(Sender) || string.IsNullOrEmpty(Receiver))
+                return false;
+                
+            if (Amount <= 0)
+                return false;
+
+            if (Inputs != null && Inputs.Any())
+            {
+                var totalInput = CountAmount(Inputs);
+                if (totalInput < Amount)
+                    return false;
+
+                if (Inputs.Any(i => !i.IsUnspent()))
+                    return false;
+            }
+
+            return true;
+        }
+
+        private static int CountAmount(List<UTXO> utxos)
+        {
+            return utxos?.Sum(utxo => utxo.GetAmount()) ?? 0;
+        }
+
+        private string UXTOListToString(List<UTXO> utxos)
+        {
+            return string.Join("\n\n", utxos.Select(utxo => utxo.GetOwnerKey()));
+        }
+
+        private string UXTOListToID(List<UTXO> utxos)
+        {
+            return string.Join("\n", utxos.Select(utxo => utxo.GetId().ToString()));
+        }
+    }
 }

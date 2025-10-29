@@ -1,87 +1,118 @@
 using System.Security.Cryptography;
 using System.Text;
 
-// cia userio klase, kuri auto pasibuildina su User() konstruktoriumi
-public class User
+namespace BlockchainSimulation
 {
-    public static List<User> users = new(); //cia irgi, viesa visu egzistuojanciu useriu duombaze
-    string name;
-    string publicKey;
-
-    public User()
+    // cia userio klase, kuri auto pasibuildina su User() konstruktoriumi
+    public class User
     {
-        name = GenerateRandomName(5, 10);
-        publicKey = GenPublicKey();
-        new UTXO(publicKey, RandomNumberGenerator.GetInt32(100, 1000000));
-        users.Add(this);
-    }
+        public static List<User> users = new(); //cia irgi, viesa visu egzistuojanciu useriu duombaze
+        string name;
+        string publicKey;
 
-
-    public void MakeTransaction(string receiver, int amount)
-    {
-        if (amount > GetBalance())
-            Console.WriteLine("Bro, you poor");
-        else
+        public User(string? name = null, decimal initialBalance = 0)
         {
-            Transaction.CreateOrNull(publicKey, receiver, amount, FindUTXOs(amount));
+            this.name = name ?? GenerateRandomName(5, 10);
+            publicKey = GenPublicKey();
+            
+            // Create initial UTXO if balance provided or generate random
+            var amount = initialBalance > 0 ? (int)initialBalance : RandomNumberGenerator.GetInt32(100, 1000000);
+            new UTXO(publicKey, amount);
+            
+            users.Add(this);
         }
-    }
 
 
-//accesoriai
-
-    public string GetName() => name;
-    public string GetPublicKey() => publicKey;
-    public int GetBalance()
-    {
-        int balance = 0;
-        foreach (UTXO uTXO in GetUnspentUTXOs())
+        public void MakeTransaction(string receiver, int amount)
         {
-            balance += uTXO.GetAmount();
+            if (amount > Balance)
+                Console.WriteLine("Insufficient funds for transaction");
+            else
+            {
+                Transaction.CreateOrNull(publicKey, receiver, amount, FindUTXOs(amount));
+            }
         }
-        return balance;
-    }
-    public List<UTXO> GetOwnedUTXOs() => UTXO.UTXOs.Where(u => u.GetOwnerKey() == publicKey).ToList();
-    public List<UTXO> GetUnspentUTXOs() => UTXO.UTXOs.Where(u => u.GetOwnerKey() == publicKey && u.IsUnspent()).ToList();
 
 
-    //helper func
-    private readonly char[] chars =
-        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".ToCharArray();
+        //accesoriai
 
-    private string GenerateRandomName(int min, int max)
-    {
-        max++;
-        int length = RandomNumberGenerator.GetInt32(min, max); // 5..10 inclusive
-        var sb = new StringBuilder(length);
-        var bytes = new byte[length];
-        RandomNumberGenerator.Fill(bytes);
-        for (int i = 0; i < length; i++)
-            sb.Append(chars[bytes[i] % chars.Length]);
-        return sb.ToString();
-    }
-
-    private string GenPublicKey()
-    {
-        using var rsa = RSA.Create(2048);
-        var publicKey = Convert.ToBase64String(rsa.ExportSubjectPublicKeyInfo());
-        return publicKey;
-    }
-
-    private List<UTXO> FindUTXOs(int amount)
-    {
-        int currentAmount = 0;
-        List<UTXO> usedUTXOs = new();
-
-        foreach (UTXO uTXO in GetUnspentUTXOs())
+        public string Name => name;
+        public string PublicKey => publicKey;
+        public int Balance
         {
-            currentAmount += uTXO.GetAmount();
-            usedUTXOs.Add(uTXO);
-
-            if (currentAmount >= amount)
-                return usedUTXOs;
+            get
+            {
+                int balance = 0;
+                foreach (UTXO uTXO in UnspentUTXOs)
+                {
+                    balance += uTXO.GetAmount();
+                }
+                return balance;
+            }
         }
+        public List<UTXO> OwnedUTXOs => UTXO.UTXOs.Where(u => u.GetOwnerKey() == publicKey).ToList();
+        public List<UTXO> UnspentUTXOs => UTXO.UTXOs.Where(u => u.GetOwnerKey() == publicKey && u.IsUnspent()).ToList();
+
+
+        //helper func
+        private readonly char[] chars =
+            "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".ToCharArray();
+
+        private string GenerateRandomName(int min, int max)
+        {
+            max++;
+            int length = RandomNumberGenerator.GetInt32(min, max); // 5..10 inclusive
+            var sb = new StringBuilder(length);
+            var bytes = new byte[length];
+            RandomNumberGenerator.Fill(bytes);
+            for (int i = 0; i < length; i++)
+                sb.Append(chars[bytes[i] % chars.Length]);
+            return sb.ToString();
+        }
+
+        private string GenPublicKey()
+        {
+            using var rsa = RSA.Create(2048);
+            var publicKey = Convert.ToBase64String(rsa.ExportSubjectPublicKeyInfo());
+            return publicKey;
+        }
+
+        private List<UTXO> FindUTXOs(int amount)
+        {
+            int currentAmount = 0;
+            List<UTXO> usedUTXOs = new();
+
+            foreach (UTXO uTXO in UnspentUTXOs)
+            {
+                currentAmount += uTXO.GetAmount();
+                usedUTXOs.Add(uTXO);
+
+                if (currentAmount >= amount)
+                    return usedUTXOs;
+            }
+
+            return usedUTXOs;
+        }
+
+        public bool HasSufficientBalance(int amount) => Balance >= amount;
+
+        public void Credit(int amount) => new UTXO(publicKey, amount);
         
-        return usedUTXOs;
+        public void Debit(int amount)
+        {
+            // Find UTXOs to spend
+            var utxos = FindUTXOs(amount);
+            if (utxos.Count == 0 || CountAmount(utxos) < amount)
+                throw new InvalidOperationException("Insufficient balance");
+                
+            // Spend them
+            foreach (var utxo in utxos)
+                utxo.Spend();
+        }
+
+        private static int CountAmount(List<UTXO> utxos)
+        {
+            return utxos?.Sum(utxo => utxo.GetAmount()) ?? 0;
+        }
     }
 }

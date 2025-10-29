@@ -31,7 +31,7 @@ namespace BlockchainSimulation
         public string CalculateHash()
         {
             string data = $"{PrevBlockHash}{Timestamp.Ticks}{Version}{MerkleRootHash}{Nonce}{DifficultyTarget}";
-            return TitoAi.Hash(data);
+            return TitoAI.Hash(data);
         }
 
         
