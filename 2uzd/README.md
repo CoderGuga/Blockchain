@@ -60,7 +60,10 @@ Programa siūlo tris veikimo režimus:
 4. Peržiūrėkite blockchain statistiką
 
 ## Ekranvaidžiai
-
+<img width="1266" height="430" alt="image" src="https://github.com/user-attachments/assets/7e888e9b-c847-48ec-a49d-81d6d562f0ee" />
+<img width="1251" height="625" alt="image" src="https://github.com/user-attachments/assets/af8a92a0-e533-4dca-ada3-71873ff6514f" />
+<img width="1265" height="388" alt="image" src="https://github.com/user-attachments/assets/54b205d5-a542-4858-babd-f4022c676903" />
+<img width="1240" height="485" alt="image" src="https://github.com/user-attachments/assets/baf5ce49-9448-408a-8c5e-26c08cf7f48e" />
 
 ## Techninė realizacija
 
