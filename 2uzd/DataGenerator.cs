@@ -106,7 +106,7 @@ namespace BlockchainSimulation
                         foreach (var u in sender.UnspentUTXOs)
                         {
                             inputs.Add(u);
-                            accumulated += u.GetAmount();
+                            accumulated += u.amount;
                             if (accumulated >= intAmount) break;
                         }
 

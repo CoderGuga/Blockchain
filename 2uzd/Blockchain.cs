@@ -33,11 +33,7 @@ namespace BlockchainSimulation
         {
             Console.WriteLine("\n🔷 Creating Genesis Block...");
             
-            var genesisTransaction = new Transaction(
-                "SYSTEM",
-                "GENESIS",
-                0
-            );
+            var genesisTransaction = Transaction.CreateGenesisTransaction();
 
             var genesisBlock = new Block(0, "0", new List<Transaction> { genesisTransaction }, DifficultyTarget);
             genesisBlock.Mine();

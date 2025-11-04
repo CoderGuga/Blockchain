@@ -17,7 +17,7 @@ namespace BlockchainSimulation
             
             // Create initial UTXO if balance provided or generate random
             var amount = initialBalance > 0 ? (int)initialBalance : RandomNumberGenerator.GetInt32(100, 1000000);
-            new UTXO(publicKey, amount);
+            new UTXO(publicKey, amount, UTXO.CoinbaseTransactionID, 0);
             
             users.Add(this);
         }
@@ -45,13 +45,13 @@ namespace BlockchainSimulation
                 int balance = 0;
                 foreach (UTXO uTXO in UnspentUTXOs)
                 {
-                    balance += uTXO.GetAmount();
+                    balance += uTXO.amount;
                 }
                 return balance;
             }
         }
-        public List<UTXO> OwnedUTXOs => UTXO.UTXOs.Where(u => u.GetOwnerKey() == publicKey).ToList();
-        public List<UTXO> UnspentUTXOs => UTXO.UTXOs.Where(u => u.GetOwnerKey() == publicKey && u.IsUnspent()).ToList();
+        public List<UTXO> OwnedUTXOs => UTXO.UTXOs.Where(u => u.ownerKey == publicKey).ToList();
+        public List<UTXO> UnspentUTXOs => UTXO.UTXOs.Where(u => u.ownerKey == publicKey && u.unspent).ToList();
 
 
         //helper func
@@ -84,7 +84,7 @@ namespace BlockchainSimulation
 
             foreach (UTXO uTXO in UnspentUTXOs)
             {
-                currentAmount += uTXO.GetAmount();
+                currentAmount += uTXO.amount;
                 usedUTXOs.Add(uTXO);
 
                 if (currentAmount >= amount)
@@ -96,7 +96,7 @@ namespace BlockchainSimulation
 
         public bool HasSufficientBalance(int amount) => Balance >= amount;
 
-        public void Credit(int amount) => new UTXO(publicKey, amount);
+        public void Credit(int amount) => new UTXO(publicKey, amount, UTXO.CoinbaseTransactionID, 0);
         
         public void Debit(int amount)
         {
@@ -112,7 +112,7 @@ namespace BlockchainSimulation
 
         private static int CountAmount(List<UTXO> utxos)
         {
-            return utxos?.Sum(utxo => utxo.GetAmount()) ?? 0;
+            return utxos?.Sum(utxo => utxo.amount) ?? 0;
         }
     }
 }
