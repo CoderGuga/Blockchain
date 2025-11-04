@@ -87,7 +87,7 @@ namespace BlockchainSimulation
                 
                 // 4. Generuoti transakcijas
                 List<Transaction> transactions = DataGenerator.GenerateTransactions(users, txCount);
-                DataGenerator.ShuffleTransactions(transactions);
+                //DataGenerator.ShuffleTransactions(transactions);
                 
                 // 5. Pridėti transakcijas
                 Console.WriteLine("\n📤 Adding transactions to blockchain...");

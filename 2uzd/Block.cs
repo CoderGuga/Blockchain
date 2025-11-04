@@ -50,35 +50,46 @@ namespace BlockchainSimulation
        
         // Proof-of-Work kasimo procesas
      
-        public void Mine()
+        public bool Mine(int tryCount = 1000)
         {
             Console.WriteLine($"\n⛏️  Mining Block #{Index}...");
             Console.WriteLine($"   Target: {new string('0', Header.DifficultyTarget)}...");
             
             DateTime startTime = DateTime.UtcNow;
             long attempts = 0;
-            
+            bool failed = false;
+
             do
             {
                 Header.Nonce++;
                 Hash = Header.CalculateHash();
                 attempts++;
 
-                // Progreso rodymas kas 100000 bandymų
-                if (attempts % 100000 == 0)
+                if (attempts >= tryCount)
                 {
-                    Console.WriteLine($"   Attempts: {attempts:N0}, Current hash: {Hash.Substring(0, 16)}...");
+                    failed = true;
+                    break;
                 }
 
             } while (!Header.HashMeetsDifficulty(Hash));
 
             TimeSpan miningTime = DateTime.UtcNow - startTime;
+
+            if (failed)
+            {
+                Console.WriteLine($"X  Block mining failed!");
+                Console.WriteLine($"   Attempts: {attempts:N0}");
+                Console.WriteLine($"   Time:     {miningTime.TotalSeconds:F2}s");
+                return false;
+            }
             
             Console.WriteLine($"✓  Block mined successfully!");
             Console.WriteLine($"   Hash:     {Hash}");
             Console.WriteLine($"   Nonce:    {Header.Nonce:N0}");
             Console.WriteLine($"   Attempts: {attempts:N0}");
             Console.WriteLine($"   Time:     {miningTime.TotalSeconds:F2}s");
+
+            return true;
         }
 
     

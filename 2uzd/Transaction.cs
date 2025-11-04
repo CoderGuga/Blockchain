@@ -179,10 +179,5 @@ namespace BlockchainSimulation
         {
             return utxos?.Sum(utxo => utxo.amount) ?? 0;
         }
-
-        private string UXTOListToString(List<UTXO> utxos)
-        {
-            return string.Join("\n\n", utxos.Select(utxo => utxo.ownerKey));
-        }
     }
 }

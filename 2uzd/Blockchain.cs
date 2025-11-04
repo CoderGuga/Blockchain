@@ -15,6 +15,8 @@ namespace BlockchainSimulation
         public int DifficultyTarget { get; set; }
         public int TransactionsPerBlock { get; set; }
 
+        private int tryCount = 1000, candidateCount = 5;
+
         
         /// Konstruktorius su genesis bloku
         public Blockchain(int difficultyTarget = 3, int transactionsPerBlock = 100)
@@ -86,27 +88,60 @@ namespace BlockchainSimulation
         /// Iškasa naują bloką
         public void MineNextBlock()
         {
+            int blockTryCount = tryCount;
+
+            List<List<Transaction>> diffLists = new();
+
             if (PendingTransactions.Count == 0)
             {
                 Console.WriteLine("\n⚠️  No pending transactions to mine.");
                 return;
             }
 
-            // Paima transakcijas
             int txCount = Math.Min(TransactionsPerBlock, PendingTransactions.Count);
-            List<Transaction> transactionsToMine = PendingTransactions.Take(txCount).ToList();
+
+            var rng = new Random();
+
+            for (int i = 0; i < candidateCount; i++)
+            {
+                List<Transaction> transactionsToMines = PendingTransactions
+                    .OrderBy(_ => rng.Next())
+                    .Take(txCount)
+                    .ToList();
+
+                diffLists.Add(transactionsToMines);
+            }
+            // Paima transakcijas
+            //int txCount = Math.Min(TransactionsPerBlock, PendingTransactions.Count);
+            //List<Transaction> transactionsToMine = PendingTransactions.Take(txCount).ToList();
 
             Console.WriteLine($"\n📦 Creating new block with {txCount} transactions...");
+
+
 
             // Gauti paskutinio bloko hash
             string prevHash = GetLatestBlock().Hash;
             int newIndex = Chain.Count;
 
-            // Sukurti bloką
-            Block newBlock = new Block(newIndex, prevHash, transactionsToMine, DifficultyTarget);
+            Block newBlock = new Block(newIndex, prevHash, diffLists[0], DifficultyTarget);
+            List<Transaction> transactionsToMine = new();
+
+            bool successfull = false;
+            while (!successfull)
+            {
+                for (int i = 0; i < candidateCount; i++)
+                {
+                    transactionsToMine = diffLists[i];
+                    
+                    // Sukurti bloką
+                    newBlock = new Block(newIndex, prevHash, transactionsToMine, DifficultyTarget);
+                    successfull = newBlock.Mine(blockTryCount);
+                    if (successfull)
+                        break;
+                }
+                blockTryCount *= 2;
+            }
             
-            // Iškasti
-            newBlock.Mine();
 
             // Validuoti
             if (!newBlock.IsValid(prevHash))
@@ -121,8 +156,10 @@ namespace BlockchainSimulation
             // Atnaujinti balansus
             UpdateBalances(transactionsToMine);
 
-            // Pašalinti įtrauktas transakcijas
-            PendingTransactions.RemoveRange(0, txCount);
+            foreach(Transaction transaction in transactionsToMine)
+            {
+                PendingTransactions.Remove(transaction);
+            }
 
             Console.WriteLine($"✓ Block #{newIndex} added to blockchain!");
             Console.WriteLine($"   Remaining pending transactions: {PendingTransactions.Count}");
