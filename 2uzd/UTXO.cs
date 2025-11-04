@@ -24,10 +24,5 @@ namespace BlockchainSimulation
             UTXOs.Add(this);
         }
         public void Spend() => unspent = false;
-        
-        private void CreateID()
-        {
-            
-        }
     }
 }

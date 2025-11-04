@@ -208,7 +208,7 @@ namespace BlockchainSimulation
 
         static void PrintHeader()
         {
-            Console.Clear();
+            
             Console.WriteLine(@"
 ╔════════════════════════════════════════════════════════════════╗
 ║                                                                ║

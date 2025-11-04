@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace BlockchainSimulation
@@ -60,24 +61,23 @@ namespace BlockchainSimulation
         public bool AddTransaction(Transaction transaction)
         {
             if (transaction == null || !transaction.Validate())
+            {
+                Console.WriteLine("transaction is null or invalid");
                 return false;
+            }
 
-            // Patikrinti siuntėją
-            if (!Users.ContainsKey(transaction.Sender))
+            if (!Transaction.VerifyTransaction(transaction))
+            {
+                Console.WriteLine("transaction verification failed");
                 return false;
-
-            // Patikrinti gavėją
-            if (!Users.ContainsKey(transaction.Receiver))
-                return false;
-
-            // Patikrinti balansą
-            var sender = Users[transaction.Sender];
-            if (!sender.HasSufficientBalance(transaction.Amount))
-                return false;
+            }     
 
             // Reserve inputs so they cannot be double-spent by other pending TXs
             if (!transaction.ReserveInputs())
+            {
+                Console.WriteLine("transaction reservation failed");
                 return false;
+            }
 
             PendingTransactions.Add(transaction);
             return true;

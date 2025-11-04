@@ -8,8 +8,8 @@ namespace BlockchainSimulation
     {
         public static List<Transaction> confirmedTransactions = new List<Transaction>();
         public static List<Transaction> unconfirmedTransactions = new List<Transaction>();
-        
-        public string TransactionId { get; private set; }
+
+        public string TransactionId { get; private set; } = "Genesis";
         public string Sender { get; private set; } = null!;
         public string Receiver { get; private set; } = null!;
         public int Amount { get; private set; }
@@ -21,10 +21,18 @@ namespace BlockchainSimulation
         
         public static bool VerifyTransaction(Transaction transaction)
         {
-            foreach(UTXO uTXO in transaction.Inputs)
+            if (transaction.Amount > CountAmount(transaction.Inputs))
             {
-                if ()
+                Console.WriteLine("transaction amount is too big");
+                return false;
             }
+            if (transaction.TransactionId != transaction.CountID())
+            {
+                Console.WriteLine("transaction id is invalid");
+                return false;
+            }
+
+            return true;
         }
         public bool Validate() => ValidateTransaction();
 
@@ -37,7 +45,6 @@ namespace BlockchainSimulation
             Inputs = new List<UTXO>();
             Outputs = new List<UTXO>();
             IsValid = true;
-            TransactionId = CountID();
             unconfirmedTransactions.Add(this);
         }
 
@@ -68,7 +75,7 @@ namespace BlockchainSimulation
             IsValid = ValidateTransaction();
         }
 
-        /// Attempt to reserve (spend) the input UTXOs for this transaction.
+        /// Attempt to reserve the input UTXOs for this transaction.
         /// Returns true if all inputs were unspent and are now marked spent.
         public bool ReserveInputs()
         {
@@ -85,7 +92,7 @@ namespace BlockchainSimulation
                     return false;
             }
 
-            // Mark them as spent
+            // Mark them as reserved
             foreach (var u in Inputs)
                 u.Spend();
 
@@ -115,6 +122,7 @@ namespace BlockchainSimulation
 
             tx = new Transaction(sender, receiver, amount);
             tx.SetInputs(unspentUTXOs);
+            tx.TransactionId = tx.CountID();
             return true;
         }
 
@@ -146,7 +154,7 @@ namespace BlockchainSimulation
             return true;
         }
         
-        private string CountID()
+        public string CountID()
         {
             string properties = "";
             properties += Sender;
