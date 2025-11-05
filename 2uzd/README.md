@@ -83,6 +83,10 @@ Programa siūlo tris veikimo režimus:
   - Transakcijos ID
 
 ### Kasybos procesas
+- Sugeneruojami 5 skirtingi kasimo profiliai, kiekvienas su atsitiktinai pasirinktomis transakcijomis
+- Iteruojama per visus 5 profilius, kiekvienam duodant po 1000 šansų iškasti bloką
+- Nepavykus iškasti, šansų skaičius padvigubinamas ir vėl iteruojama per visus profilius
+- Visų naudojamų transakcijų verifikacija
 - Proof-of-work sistema su reguliuojamu sudėtingumu
 - Merkle root skaičiavimas transakcijų verifikavimui
 - Blokų validacija prieš pridedant į grandinę
