@@ -91,6 +91,20 @@ Programa siūlo tris veikimo režimus:
 - Merkle root skaičiavimas transakcijų verifikavimui
 - Blokų validacija prieš pridedant į grandinę
 
+### AI naudojimas
+- AI buvo naudotas:
+   - Aprašymo generavime
+   - Merkle tree kurime
+   - Hash kurime
+   - Block'o, bei jo headerio kurime
+   - Bloko kasimo kurime
+ 
+- AI nebuvo naudotas:
+  - User'io kurime
+  - Transakcijų kurime
+  - UTXO kurime
+  - Kasimo profiliu kurime
+
 ## Sistemos reikalavimai
 
 - .NET 9.0 arba naujesnė versija
